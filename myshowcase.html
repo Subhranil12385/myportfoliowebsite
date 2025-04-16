@@ -1,0 +1,1425 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row =>
+                    row.some(cell => cell !== '' && cell !== null && cell !== undefined)
+                );
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Showcase</title>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script type="text/javascript">
+    var gk_isXlsx = false;
+    var gk_xlsxFileLookup = {};
+    var gk_fileData = {};
+    function loadFileData(filename) {
+      if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+        try {
+          var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+          var firstSheetName = workbook.SheetNames[0];
+          var worksheet = workbook.Sheets[firstSheetName];
+          var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+          var filteredData = jsonData.filter(row =>
+            row.some(cell => cell !== '' && cell !== null && cell !== undefined)
+          );
+          var csv = XLSX.utils.aoa_to_sheet(filteredData);
+          csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+          return csv;
+        } catch (e) {
+          console.error(e);
+          return "";
+        }
+      }
+      return gk_fileData[filename] || "";
+    }
+  </script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Google Sans', sans-serif;
+      background: #000;
+      color: #fff;
+      overflow-x: hidden;
+      position: relative;
+      line-height: 1.4;
+    }
+
+    #circuit-glow {
+      position: fixed;
+      width: 300px;
+      height: 300px;
+      pointer-events: none;
+      background: radial-gradient(rgba(0, 255, 255, 0.4), transparent 80%), url('');
+      background-size: cover;
+      background-repeat: no-repeat;
+      mix-blend-mode: screen;
+      opacity: 0.9;
+      filter: blur(6px);
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    header {
+      background: linear-gradient(90deg, rgba(255, 0, 0, 0.5), rgba(255, 165, 0, 0.5), rgba(255, 255, 0, 0.5), rgba(0, 128, 0, 0.5), rgba(0, 0, 255, 0.5), rgba(75, 0, 130, 0.5), rgba(238, 130, 238, 0.5));
+      background-size: 400% 400%;
+      animation: rainbow 10s ease infinite;
+      text-align: center;
+      padding: 1rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-shadow: 0 0 10px #fff;
+      z-index: 2;
+      position: relative;
+      transition: opacity 0.1s ease;
+      opacity: 1;
+      backdrop-filter: blur(4px);
+    }
+
+    @keyframes rainbow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      background: rgba(17, 17, 17, 0.7);
+      padding: 0.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      flex-wrap: wrap;
+      transition: opacity 0.2s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 0.5rem;
+      font-size: 0.9rem;
+      position: relative;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 1px;
+      bottom: -2px;
+      left: 0;
+      background: cyan;
+      transition: width 0.3s;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    section {
+      padding: 2rem 1rem;
+      max-width: 100%;
+      margin: auto;
+      position: relative;
+      z-index: 1;
+      transition: opacity 0.2s ease;
+    }
+
+    .project-card {
+      background: linear-gradient(135deg, rgba(255, 0, 0, 0.2), rgba(0, 255, 0, 0.3));
+      border: none;
+      backdrop-filter: blur(5px);
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem 0;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .article-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(29, 78, 255, 0.2));
+      border: none;
+      backdrop-filter: blur(5px);
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem 0;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .achievement-card {
+      background: linear-gradient(135deg, rgba(255, 0, 0, 0.2), rgba(0, 0, 225, 0.8));
+      border: none;
+      backdrop-filter: blur(5px);
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem 0;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .certification-card {
+      background: linear-gradient(135deg, rgba(255, 255, 0, 0.1), rgba(0, 11, 255, 0.2));
+      border: none;
+      backdrop-filter: blur(5px);
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem 0;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .internship-card {
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 0, 139, 0.2));
+      border: none;
+      backdrop-filter: blur(5px);
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem 0;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .research-card {
+      background: linear-gradient(135deg, rgba(255, 105, 225, 0.2), rgba(0, 0, 205, 0.7));
+      border: none;
+      backdrop-filter: blur(5px);
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem 0;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-card:hover, .article-card:hover, .achievement-card:hover, .certification-card:hover, .internship-card:hover, .research-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(0, 255, 255, 1);
+    }
+
+    .project-card:hover .project-description,
+    .article-card:hover .article-description,
+    .achievement-card:hover .achievement-description,
+    .certification-card:hover .certification-description,
+    .internship-card:hover .internship-description,
+    .research-card:hover .research-description {
+      max-height: 250px;
+      opacity: 1;
+      padding-top: 0.5rem;
+    }
+
+    .project-description, .article-description, .achievement-description, .certification-description, .internship-description, .research-description {
+      max-height: 0;
+      opacity: 0;
+      font-size: 0.8rem;
+      color: #ccc;
+      overflow: hidden;
+      transition: max-height 0.5s ease, opacity 0.5s ease, padding-top 0.5s ease;
+      flex-grow: 0;
+    }
+
+    .project-card .card-buttons,
+    .article-card .card-buttons,
+    .achievement-card .card-buttons,
+    .certification-card .card-buttons,
+    .internship-card .card-buttons,
+    .research-card .card-buttons {
+      visibility: hidden;
+      opacity: 0;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      transition: visibility 0.3s ease, opacity 0.3s ease;
+      margin-top: auto;
+    }
+
+    .project-card:hover .card-buttons,
+    .article-card:hover .card-buttons,
+    .achievement-card:hover .card-buttons,
+    .certification-card:hover .card-buttons,
+    .internship-card:hover .card-buttons,
+    .research-card:hover .card-buttons {
+      visibility: visible;
+      opacity: 1;
+      padding-top: 0.5rem;
+    }
+
+    .project-card h3, .article-card h3, .achievement-card h3, .certification-card h3, .internship-card h3, .research-card h3 {
+      font-size: 1.3rem;
+    }
+
+    .button {
+      margin: 0.25rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      border: none;
+      background: linear-gradient(to right, #ff00cc, #3333ff);
+      color: white;
+      box-shadow: 0 0 15px #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s ease, height 0.3s ease;
+    }
+
+    .button:active::before {
+      width: 200px;
+      height: 200px;
+    }
+
+    .button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px #0ff;
+    }
+
+    .qualifications .qual-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1rem 0;
+    }
+
+    .qualifications .qual-item p {
+      margin: 0;
+      flex-grow: 1;
+    }
+
+    .qualifications .qual-item .card-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-left: 1rem;
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .qualifications .card-buttons .button {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.6rem;
+      border-radius: 5px;
+    }
+
+    footer {
+      background: #111;
+      text-align: center;
+      padding: 1rem;
+      border-top: 1px solid #444;
+      position: relative;
+      z-index: 1;
+      font-size: 0.9rem;
+      transition: opacity 0.5s ease;
+    }
+
+    .rainbow-glow {
+      text-shadow: 0 0 5px #f0f, 0 0 10px #0ff, 0 0 20px #0f0, 0 0 40px #ff0;
+    }
+
+    .header-text {
+      text-shadow: 0 0 10px #fff, 0 0 20px #f0f, 0 0 30px #0ff, 0 0 40px #0f0;
+    }
+
+    .social-icons {
+      margin: 0.5rem 0;
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: opacity 0.5s ease;
+    }
+
+    .social-icons a {
+      color: #0ff;
+      font-size: 1.2rem;
+      transition: transform 0.3s;
+    }
+
+    .social-icons a:hover {
+      color: #fff;
+      transform: scale(1.3);
+    }
+
+    .skills {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.5rem;
+      margin-top: 1rem;
+      transition: opacity 0.5s ease;
+    }
+
+    .skill-badge {
+      background: #222;
+      padding: 0.25rem 0.5rem;
+      border-radius: 5px;
+      border: 1px solid #0ff;
+      font-size: 0.7rem;
+      box-shadow: 0 0 5px #0ff;
+      color: #fff;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .skill-badge:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px #0ff;
+    }
+
+    .skill-badge::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0, 255, 255, 0.3), rgba(255, 0, 255, 0.3));
+      animation: glowPulse 3s infinite;
+      z-index: -1;
+    }
+
+    @keyframes glowPulse {
+      0% { transform: scale(0.5); opacity: 0.3; }
+      50% { transform: scale(1.5); opacity: 0.7; }
+      100% { transform: scale(0.5); opacity: 0.3; }
+    }
+
+    .about-me-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      transition: opacity 0.5s ease;
+    }
+
+    .about-me-left, .about-me-right {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      opacity: 0;
+      animation: fadeInText 1s ease-in forwards;
+      transition: opacity 0.5s ease;
+    }
+
+    .about-me-left {
+      color: cyan;
+    }
+
+    .about-me-right {
+      color: #ff4500;
+    }
+
+    .home-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 2rem;
+      text-align: left;
+      transition: opacity 0.5s ease;
+      position: relative;
+    }
+
+    .home-text {
+      font-size: 1.2rem;
+      line-height: 1.8rem;
+      transition: opacity 0.5s ease;
+      width: 70%;
+    }
+
+    .home-text p {
+      opacity: 0;
+      animation: fadeInText 1s ease-in forwards;
+    }
+
+    .home-text .job-seek {
+      font-size: 0.9rem;
+      line-height: 1.4rem;
+    }
+
+    @keyframes fadeInText {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .home-text .name {
+      font-weight: bold;
+      color: #ff4500;
+    }
+
+    .home-image-container {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      flex-shrink: 0;
+    }
+
+    .home-image {
+      width: 100%;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1744648613774-b4cc340d33d9?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwcm9maWxlLXBhZ2V8MXx8fGVufDB8fHx8fA%3D%3D') no-repeat center;
+      background-size: cover;
+      border: 2px solid #0ff;
+      border-radius: 10px;
+      transition: opacity 0.5s ease;
+    }
+
+    .rgb-ring {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: pulse 2s infinite;
+      border-style: solid;
+      border-width: 2px;
+      background: transparent;
+    }
+
+    .rgb-ring.red {
+      width: 20px;
+      height: 20px;
+      border-color: red;
+      top: -15px;
+      left: -15px;
+    }
+
+    .rgb-ring.green {
+      width: 15px;
+      height: 15px;
+      border-color: green;
+      bottom: -15px;
+      left: -10px;
+    }
+
+    .rgb-ring.blue {
+      width: 25px;
+      height: 25px;
+      border-color: blue;
+      bottom: -20px;
+      right: -20px;
+    }
+
+    .rgb-ring.yellow {
+      width: 22px;
+      height: 22px;
+      border-color: yellow;
+      top: -18px;
+      right: -18px;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.2); opacity: 0.9; }
+      100% { transform: scale(1); opacity: 0.7; }
+    }
+
+    .home-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      align-items: center;
+    }
+
+    .chat-link {
+      font-size: 0.9rem;
+      color: #0ff;
+      text-decoration: none;
+      margin-top: 0.5rem;
+      display: inline-flex;
+      align-items: center;
+      transition: color 0.3s ease;
+    }
+
+    .chat-link:hover {
+      color: #fff;
+    }
+
+    .firefly {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.9;
+      filter: blur(2px);
+      transition: opacity 0.5s ease;
+    }
+
+    .firefly.rainbow {
+      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+      background-size: 400% 400%;
+      animation: rainbow 10s ease infinite;
+    }
+
+    .firefly.cyan {
+      background: cyan;
+    }
+
+    .firefly.yellow {
+      background: yellow;
+    }
+
+    .firefly.magenta {
+      background: magenta;
+    }
+
+    .internship-grid, .research-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .article-grid, .project-grid, .certification-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    [data-aos] {
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    [data-aos].aos-animate {
+      opacity: 1;
+    }
+
+    [data-aos].aos-animate-out {
+      opacity: 0;
+    }
+
+    @media (max-width: 768px) {
+      .home-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .home-text {
+        width: 100%;
+        font-size: 1rem;
+        line-height: 1.5rem;
+      }
+      .home-text .job-seek {
+        font-size: 0.8rem;
+      }
+      .home-image-container {
+        margin: 1rem auto;
+      }
+      .home-buttons {
+        margin-top: 0.5rem;
+      }
+      .chat-link {
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (min-width: 769px) {
+      #circuit-glow {
+        width: 600px;
+        height: 600px;
+      }
+      header {
+        padding: 2rem;
+        font-size: 2rem;
+        text-shadow: 0 0 20px #fff;
+      }
+      nav {
+        padding: 1rem;
+      }
+      nav a {
+        margin: 0 1.5rem;
+        font-size: .9rem;
+      }
+      nav a::after {
+        height: 2px;
+        bottom: -5px;
+      }
+      section {
+        padding: 4rem 2rem;
+        max-width: 1200px;
+      }
+      .project-card, .article-card, .achievement-card, .certification-card, .internship-card, .research-card {
+        border-radius: 15px;
+        padding: 2rem;
+        margin: 1rem 0.5rem;
+      }
+      .project-description, .article-description, .achievement-description, .certification-description, .internship-description, .research-description {
+        font-size: 0.9rem;
+      }
+      .project-card:hover .project-description,
+      .article-card:hover .article-description,
+      .achievement-card:hover .achievement-description,
+      .certification-card:hover .certification-description,
+      .internship-card:hover .internship-description,
+      .research-card:hover .research-description {
+        max-height: 200px;
+        padding-top: 1rem;
+      }
+      .project-card:hover .card-buttons,
+      .article-card:hover .card-buttons,
+      .achievement-card:hover .card-buttons,
+      .certification-card:hover .card-buttons,
+      .internship-card:hover .card-buttons,
+      .research-card:hover .card-buttons {
+        visibility: visible;
+        opacity: 1;
+        padding-top: 1rem;
+      }
+      .project-card h3, .article-card h3, .achievement-card h3, .certification-card h3, .internship-card h3, .research-card h3 {
+        font-size: 1.5rem;
+      }
+      .button {
+        margin: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        font-size: 0.9rem;
+        border-radius: 10px;
+        box-shadow: 0 0 25px #fff;
+      }
+      .button:hover {
+        box-shadow: 0 0 25px #0ff;
+      }
+      footer {
+        padding: 2rem;
+        font-size: 1rem;
+      }
+      .rainbow-glow {
+        text-shadow: 0 0 10px #f0f, 0 0 20px #0ff, 0 0 40px #0f0, 0 0 80px #ff0;
+      }
+      .social-icons {
+        margin: 1rem 0;
+      }
+      .social-icons a {
+        font-size: 1.5rem;
+        margin: 0 1rem;
+      }
+      .skills {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+      }
+      .skill-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        box-shadow: 0 0 10px #0ff;
+      }
+      .skill-badge:hover {
+        box-shadow: 0 0 15px #0ff;
+      }
+      .about-me-container {
+        flex-direction: row;
+      }
+      .about-me-left, .about-me-right {
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+      .home-content {
+        flex-direction: row;
+        align-items: flex-start;
+        text-align: left;
+      }
+      .home-text {
+        font-size: 1.5rem;
+        line-height: 2.5rem;
+      }
+      .home-text .job-seek {
+        font-size: 1rem;
+      }
+      .home-image-container {
+        width: 200px;
+        height: 200px;
+      }
+      .rgb-ring.red {
+        width: 30px;
+        height: 30px;
+        top: -20px;
+        left: -20px;
+      }
+      .rgb-ring.green {
+        width: 25px;
+        height: 25px;
+        bottom: -20px;
+        left: -15px;
+      }
+      .rgb-ring.blue {
+        width: 35px;
+        height: 35px;
+        bottom: -25px;
+        right: -25px;
+      }
+      .rgb-ring.yellow {
+        width: 32px;
+        height: 32px;
+        top: -22px;
+        right: -22px;
+      }
+      .firefly {
+        filter: blur(3px);
+      }
+      .internship-grid, .research-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .article-grid, .project-grid, .certification-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <audio id="hover-sound" src=""></audio>
+  <div id="circuit-glow"></div>
+
+  <header id="header"><span class="header-text">Welcome to My Personal Showcase</span></header>
+
+  <nav id="nav">
+    <a href="#home">🏡Home</a>
+    <a href="#about">👨‍🔧About Me</a>
+    <a href="#qualifications">🏫Qualifications</a>
+    <a href="#projects">🔬Projects</a>
+    <a href="#research">🔎Researches</a>
+    <a href="#articles">🖋️Articles</a>
+    <a href="#internships">🧑🏻‍💻Internships</a>
+    <a href="#certifications">📜Certifications</a>
+    <a href="#achievements">📜Achievements</a>
+    <a href="#contact">📞Contact Me</a>
+  </nav>
+
+  <section id="home" data-aos="fade-up">
+    <div class="home-content" data-aos="fade-up" id="home-content">
+      <div class="home-text" id="home-text">
+        <p class="rainbow-glow">Hi,</p>
+        <p class="rainbow-glow">I'm <span class="name">Subhranil</span>.</p>
+        <p class="rainbow-glow">B.Tech Graduate, 2024</p>
+        <p class="rainbow-glow job-seek">I am a recent engineering graduate actively seeking entry-level opportunities in Core, IT and Service sectors. Please, feel free to contact me if you are looking for a passionate and dedicated fresher engineer proficient in Electronics and Telecommunication fields.</p>
+        <a href="#contact" class="chat-link">Let's connect!📞</a>
+      </div>
+      <div>
+        <div class="home-image-container" id="home-image-container">
+          <div class="home-image" id="home-image"></div>
+          <div class="rgb-ring red"></div>
+          <div class="rgb-ring green"></div>
+          <div class="rgb-ring blue"></div>
+          <div class="rgb-ring yellow"></div>
+        </div>
+        <div class="home-buttons">
+          <a href="https://drive.google.com/drive/folders/1KeD4qQYPb1qu4TuyQo47jufOeAzHNrHc" class="skill-badge" style="margin: 0.5rem 0; display: block; width: fit-content;" data-aos="fade-up" id="cv-link">Download CV</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" data-aos="fade-up">
+    <h2 class="rainbow-glow" data-aos="fade-up" id="about-title">About Me👨‍🔧</h2>
+    <div class="about-me-container" data-aos="fade-up" id="about-container">
+      <div class="about-me-left" id="about-left">
+        <h3>Something about professional me:</h3>
+        <p>Hi there! My name is Subhranil Dey, an enthusiastic and detail-driven engineer with a solid background in both electronics and telecommunication engineering. I thrive on creating productive solutions with hardware and software—whether it's crafting smart IoT systems, or developing user-friendly web and mobile interfaces. With hands-on experience in exciting projects like Mobile Controlled Garbage Truck using Raspberry Pi, Drone Surveillance System using Machine Learning and Android and Web App Development using AI, I love tackling complex challenges with a spark of creativity and simplification. I’m all about continuous learning, clean design, and innovation that truly makes an impact. When I’m not busy coding or prototyping, you’ll catch me diving into the latest tech trends, optimizing ideas, or working personal projects that redefine limits. Let’s collaborate and create extraordinary together!</p>
+      </div>
+      <div class="about-me-right" id="about-right">
+        <h3>And a little bit of personal me:</h3>
+        <p>I am a fresher with a creative edge and a keen eye for detail. I was born and brought up in Lumding, Assam—a small town that shaped my curiosity and drive. I completed my schooling there before pursuing my B.Tech in Electronics and Telecommunication Engineering from Assam Engineering College, Guwahati. Currently, I’m further sharpening my technical skills like App development and Website building. I love leveraging the power of Artificial Intelligence into my projects, finding easy workarounds using Prompt engineering and Vibe Coding. Photography isn’t just a hobby for me; it’s how I see patterns, perspectives, and stories. You’ll find me chasing sunsets, editing shots, shooting videos, writing articles or planning the next big project.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="qualifications" class="qualifications" data-aos="fade-up">
+    <h2 class="rainbow-glow" data-aos="fade-up" id="qualifications-title">My Qualifications🏫</h2>
+    <div class="qual-item" data-aos="fade-up">
+      <p id="qual1"><strong>Class X:</strong> Pranabananda Vidyamandir (CBSE), Lumding, 2018, Percentage: 92.4%</p>
+      <div class="card-buttons">
+        <a href="https://drive.google.com/file/d/12pVj4IXB9sMNAq3g_0Y3hcRMjd8DTYtt/view?usp=drivesdk" target="_blank"><button class="button">View Marksheet</button></a>
+        <a href="https://drive.google.com/file/d/12qA6rJwh09HH3QlWIjg2njVyOVXYfd0s/view?usp=drivesdk" target="_blank"><button class="button">View Pass Certificate</button></a>
+      </div>
+    </div>
+    <div class="qual-item" data-aos="fade-up">
+      <p id="qual2"><strong>Class XII:</strong> Pranabananda Vidyamandir (CBSE), Lumding, 2020, Percentage: 88.2%</p>
+      <div class="card-buttons">
+        <a href="https://drive.google.com/file/d/149uScoGt87fsjPZniq_ai7lmg9b0GqEp/view?usp=drivesdk" target="_blank"><button class="button">View Marksheet</button></a>
+        <a href="https://drive.google.com/file/d/14hryQA8qoAGjp77LrHMFd1nYbjLWbtEY/view?usp=drivesdk" target="_blank"><button class="button">View Pass Certificate</button></a>
+      </div>
+    </div>
+    <div class="qual-item" data-aos="fade-up">
+      <p id="qual3"><strong>Graduation:</strong> B.Tech in ETE, AEC (ASTU), Guwahati, 2020–2024, Percentage: 83.6%</p>
+      <div class="card-buttons">
+        <a href="https://drive.google.com/file/d/1NSF-VL7Vf7RmM78fW9QIfPmULe6KPjJe/view?usp=drivesdk" target="_blank"><button class="button">View Marksheet</button></a>
+        <a href="https://drive.google.com/file/d/1NRD1NNEcGz13O7PAakl3oDcKqB7jBysb/view?usp=drivesdk" target="_blank"><button class="button">View Pass Certificate</button></a>
+      </div>
+    </div>
+    <div class="qual-item" data-aos="fade-up">
+      <p id="qual4"><strong>GATE 2025:</strong> Score: 470, AIR 387, Subject: Humanities and Social Sciences XH-C2</p>
+      <div class="card-buttons">
+        <a href="https://drive.google.com/file/d/1Pf0_CNyadUe5VAAX64KxOWlaslFuZom3/view?usp=drivesdk" target="_blank"><button class="button">View Result Page</button></a>
+        <a href="https://drive.google.com/file/d/1Drty5Dfu1SMRFSIwtKyRSG15gNH_Hwni/view?usp=drivesdk" target="_blank"><button class="button">View Scorecard PDF</button></a>
+      </div>
+    </div>
+    <h3 class="rainbow-glow" data-aos="fade-up" style="margin-top: 1rem" id="technical-skills-title">Technical Skills</h3>
+    <div class="skills" data-aos="fade-up" id="technical-skills">
+      <div class="skill-badge" id="skill1">MS Office</div>
+      <div class="skill-badge" id="skill1">Power BI</div>
+      <div class="skill-badge" id="skill2">Canva</div>
+      <div class="skill-badge" id="skill3">MATLAB</div>
+      <div class="skill-badge" id="skill3">Simulink</div>
+      <div class="skill-badge" id="skill4">Proteus</div>
+      <div class="skill-badge" id="skill4">NI Multisim</div>
+      <div class="skill-badge" id="skill6">NI LabVIEW</div>
+      <div class="skill-badge" id="skill5">Cisco Packet Tracer</div>
+      <div class="skill-badge" id="skill5">Python</div>
+      <div class="skill-badge" id="skill7">Machine Learning</div>
+      <div class="skill-badge" id="skill8">IoT and Automation</div>
+      <div class="skill-badge" id="skill1">Arduino</div>
+      <div class="skill-badge" id="skill1">Raspberry Pi</div>
+      <div class="skill-badge" id="skill1">ESP8266</div>
+      <div class="skill-badge" id="skill1">ESP32</div>
+      <div class="skill-badge" id="skill1">MSP430</div>
+      <div class="skill-badge" id="skill1">CC3200</div>
+      <div class="skill-badge" id="skill9">Android Studio</div>
+      <div class="skill-badge" id="skill5">Firebase Studio</div>
+      <div class="skill-badge" id="skill10">AI Tools</div>
+      <div class="skill-badge" id="skill18">Prompt Engineering</div>
+      <div class="skill-badge" id="skill19">Vibe Coding</div>
+      <div class="skill-badge" id="skill19">Web development</div>
+    </div>
+    <h3 class="rainbow-glow" data-aos="fade-up" style="margin-top: 1rem" id="soft-skills-title">Soft Skills</h3>
+    <div class="skills" data-aos="fade-up" id="soft-skills">
+      <div class="skill-badge" id="skill11">Organized</div>
+      <div class="skill-badge" id="skill12">Efficient</div>
+      <div class="skill-badge" id="skill13">Collaborative</div>
+      <div class="skill-badge" id="skill14">Professionalism</div>
+      <div class="skill-badge" id="skill15">Communication</div>
+      <div class="skill-badge" id="skill16">Insightful</div>
+      <div class="skill-badge" id="skill17">Helpful</div>
+      <div class="skill-badge" id="skill17">Punctual</div>
+      <div class="skill-badge" id="skill17">Creativity</div>
+      <div class="skill-badge" id="skill17">Active Listening</div>
+      <div class="skill-badge" id="skill17">Attention to Detail</div>
+      <div class="skill-badge" id="skill17">Openness</div>
+      <div class="skill-badge" id="skill17">Empathy</div>
+      <div class="skill-badge" id="skill17">Hardworking</div>
+      <div class="skill-badge" id="skill17">Patience</div>
+      <div class="skill-badge" id="skill17">Time Management</div>
+      <div class="skill-badge" id="skill17">Resourcefulness</div>
+      <div class="skill-badge" id="skill17">Perfection</div>
+    </div>
+  </section>
+
+  <section id="projects" data-aos="fade-up">
+    <h2 class="rainbow-glow" data-aos="fade-up" id="projects-title">My Projects🔬</h2>
+    <div class="project-grid">
+      <div class="project-card" data-aos="zoom-in" id="proj9">
+        <h3>12V to 220V Inverter using 555 Timer IC</h3>
+        <div class="project-description">Designed and built an inverter circuit to convert 12V DC to 220V AC using a 555 Timer IC, transformers, and MOSFETs, suitable for powering small household appliances.</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/drive/folders/1X9hTEFJy9gxP_k7CGU7ZhjTz4gk2nbA7" target="_blank"><button class="button">View Project</button></a>
+        </div>
+      </div>
+      <div class="project-card" data-aos="zoom-in" id="proj10">
+        <h3>Burglar Alarm using PIR Sensor</h3>
+        <div class="project-description">Developed a security system using a PIR sensor to detect motion, triggering an alarm with a buzzer for real-time monitoring.</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/drive/folders/1S0De6ygzbTHz6Of-LZsvSNIOKgq2_0K9" target="_blank"><button class="button">View Project</button></a>
+        </div>
+      </div>
+      <div class="project-card" data-aos="zoom-in" id="proj11">
+        <h3>Design and Implementation of Smart Home using Cisco Packet Tracer Simulator</h3>
+        <div class="project-description">Simulated a smart home network with IoT devices like smart lights, thermostats, and security systems, configured using Cisco Packet Tracer for automation and remote control.</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/file/d/1uQsWwT5PukU5xiFTEONUXB0jmbQPMLXQ/view?usp=drivesdk" target="_blank"><button class="button">View Project</button></a>
+        </div>
+      </div>
+      <div class="project-card" data-aos="zoom-in" id="proj4">
+        <h3>Electronic Digital Weight Machine using AVR Microcontroller</h3>
+        <div class="project-description">Designed a weighing machine with over 99% accuracy for weights up to 10 pounds, using Arduino, Arduino IDE, LM741 Op-Amp, Instrumentation Amplifier, and Proteus.</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/drive/folders/14R-L0eFj7JbXYp0uIEFrxjnd3vgMiIRP" target="_blank"><button class="button">View Project</button></a>
+        </div>
+      </div>
+      <div class="project-card" data-aos="zoom-in" id="proj4">
+        <h3>Exploring different IoT platforms to build a Weather Station using ESP8266 and DHT11</h3>
+        <div class="project-description">Compared 6 different IoT cloud data logging and visualisation platforms to host the Temperature and Humidity data from DHT11 through ESP8266.</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/file/d/1lUVPHnEP1ShLZ69ZrWiRzfV8KcaN8vwc/view?usp=drive_link" target="_blank"><button class="button">View Project</button></a>
+        </div>
+      </div>
+      <div class="project-card" data-aos="zoom-in" id="proj5">
+        <h3>Stroke Prediction using Machine Learning</h3>
+        <div class="project-description">Built an ML algorithm using 6 supervised learning algorithms and 5 matrices, utilizing Jupyter Notebook, Google Colab, and Kaggle (July-Aug 2022).</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/drive/folders/12GdA4SsXQcpOiVpyoj-KyELq_1twgA7G" target="_blank"><button class="button">View Project</button></a>
+        </div>
+      </div>
+      <div class="project-card" data-aos="zoom-in" id="proj2">
+        <h3>Drone Detection using Machine Learning</h3>
+        <div class="project-description">Developed the backbone model for a larger project with a team of 8 members, prepared and annotated a custom dataset of over 3000 images using Roboflow and CVAT, tailored AlexNet for object detection and localization, achieving a validation accuracy of 82.22%.</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/drive/folders/12-jmjl8qr26Z35ZvYQ7JWKnsbt0bdxeZ" target="_blank"><button class="button">View Project</button></a>
+        </div>
+      </div>
+      <div class="project-card" data-aos="zoom-in" id="proj1">
+        <h3>Design Of AlGaN/GaN Based HEMT for Low Noise and High-Speed Applications</h3>
+        <div class="project-description">Developed a High Electron Mobility Transistor using Silvaco TCAD 2018, studying the effect of variations of 6 electrical and physical parameters on drain current, attaining a peak drain current of around 1.2A, higher than previous studies.</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/drive/folders/1kqLEFXccXrcVNyLdAaYr_cP5xbw6J4Ku" target="_blank"><button class="button">View Project</button></a>
+        </div>
+      </div>
+      <div class="project-card" data-aos="zoom-in" id="proj12">
+        <h3>Notepad Web App using Replit</h3>
+        <div class="project-description">Created a web-based notepad application using Replit, allowing users to write, save, and edit text with a simple and intuitive interface.</div>
+        <div class="card-buttons">
+          <a href="https://youtu.be/Ok-btNzfR5c?si=JrZV5SrGLB_aqLFd" target="_blank"><button class="button">View Project</button></a>
+        </div>
+      </div>
+      <div class="project-card" data-aos="zoom-in" id="proj13">
+        <h3>Notepad Android App using Android Studio</h3>
+        <div class="project-description">Developed an Android notepad app using Android Studio, enabling users to create, edit, and save notes with a clean and intuitive design.</div>
+        <div class="card-buttons">
+          <a href="https://youtu.be/HIcIEO5XuEM?si=2qHx5oR-HUF9nAuX" target="_blank"><button class="button">View Project</button></a>
+        </div>
+      </div>
+      <div class="project-card" data-aos="zoom-in" id="proj3">
+        <h3>Mobile Controlled Garbage Truck</h3>
+        <div class="project-description">Built a garbage truck using household objects, successfully tested in over 5 real-world scenarios, utilizing Arduino Mega, Raspberry Pi-3b, Servo Motors, L283D Motor Drivers, and Proteus.</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/drive/folders/1Q3c8hV91rpmAI1U-L-kBH6OaGPZAH2VW?usp=sharing" target="_blank"><button class="button">View Project</button></a>
+        </div>
+      </div>
+      <div class="project-card" data-aos="zoom-in" id="proj6">
+        <h3>Predicting Heart Disease using Machine Learning</h3>
+        <div class="project-description">Implemented supervised learning algorithms, achieving accuracy of 64.59%, precision of 63.98%, and recall of 68.88%, using various visualization techniques (July-Aug 2021).</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/drive/folders/1E11i7ptO23XzwjsqnTfGc0cR-Ln8vGUa?usp=sharing" target="_blank"><button class="button">View Project</button></a>
+        </div>
+      </div>
+      <div class="project-card" data-aos="zoom-in" id="proj7">
+        <h3>Effect of Covid-19 in Our Daily Lifestyle</h3>
+        <div class="project-description">Conducted a comprehensive study on the effect of the Covid-19 pandemic in India, surveying over 150 people and NGOs, analyzing shortcomings (July-Aug 2021).</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/file/d/1c0MBBpIIltqB3rO8Ng1_9qf8Q7I1yYiI/view?usp=drivesdk" target="_blank"><button class="button">View Report</button></a>
+        </div>
+      </div>
+      <div class="project-card" data-aos="zoom-in" id="proj8">
+        <h3>Firebase Studio Web Apps</h3>
+        <div class="project-description">A studio of web applications built using Firebase hosting, authentication, and Firestore backend technologies.</div>
+        <div class="card-buttons">
+          <a href="https://youtube.com/shorts/Z3vM844aVX8?si=7LL2xfxzInia96A5" target="_blank"><button class="button">Electricity Cost Estimator</button></a>
+          <a href="https://youtube.com/shorts/Mcy7xJ8QZvE?si=tXP_zH_zXuIthdvh" target="_blank"><button class="button">Story Weaver</button></a>
+          <a href="https://youtube.com/shorts/5s-_NkNXlaY?si=loWD-vfD4WTSbaWi" target="_blank"><button class="button">PoemPic</button></a>
+        </div>
+      </div>
+      <div class="project-card" data-aos="zoom-in" id="proj15">
+        <h3>Smart Street Light Automation using Arduino, LDR and IR Proximity Sensor</h3>
+        <div class="project-description">Developed an automated street lighting system using Arduino, LDR, and IR proximity sensors to optimize energy usage by adjusting light intensity based on ambient light and motion detection.</div>
+        <div class="card-buttons">
+          <a href="https://youtube.com/shorts/uH-hQUURUmk?si=6MYhsc11UKUL6AOS" target="_blank"><button class="button">View Project</button></a>
+        </div>
+      </div>
+      <div class="project-card" data-aos="zoom-in" id="proj16">
+        <h3>Home Decor Lighting with ESP8266, Blynk and IR Remote</h3>
+        <div class="project-description">Created an IoT-based smart lighting system using ESP8266, Blynk app, and IR remote to control decorative lighting elements, enhancing user ambiance and control.</div>
+        <div class="card-buttons">
+          <a href="https://youtube.com/shorts/pIV6GmsuJ70?si=fTUvkQAyylNk1NZI" target="_blank"><button class="button">View Project</button></a>
+        </div>
+      </div>
+      <div class="project-card" data-aos="zoom-in" id="proj14">
+        <h3>My Portfolio Website using Vibe Coding</h3>
+        <div class="project-description">Built a personal portfolio website showcasing projects, skills, and achievements using Vibe Coding techniques for a dynamic and visually appealing design.</div>
+        <div class="card-buttons">
+          <button class="button">You are currently viewing this project</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="research" data-aos="fade-up">
+    <h2 class="rainbow-glow" data-aos="fade-up" id="research-title">My Research Papers🔎</h2>
+    <div class="research-grid">
+      <div class="research-card" data-aos="zoom-in" id="res2">
+        <h3>Design of AlGaN-GaN Based High Electron Mobility Transistor for Low Noise and High Frequency Application</h3>
+        <div class="research-description">Details the design and simulation of an AlGaN/GaN HEMT optimized for low noise and high-frequency applications using Silvaco TCAD, achieving superior performance metrics.</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/file/d/1OSZGLSDS9yyVEc-4xzcKiGTmu-a9SVSv/view?usp=drivesdk" target="_blank"><button class="button">Read Paper</button></a>
+        </div>
+      </div>
+      <div class="research-card" data-aos="zoom-in" id="res3">
+        <h3>Effect of Temperature Variation on Threshold Voltage, Drain Current and Transconductance in AlGaN-GaN HEMT</h3>
+        <div class="research-description">Investigates the impact of temperature variations on key electrical parameters of AlGaN/GaN HEMTs, providing insights into thermal stability and performance optimization.</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/file/d/1OZRsN47V7SRzHro44xO3RfWxiSNGETaZ/view?usp=drivesdk" target="_blank"><button class="button">Read Paper</button></a>
+        </div>
+      </div>
+      <div class="research-card" data-aos="zoom-in" id="res4">
+        <h3>Threshold-Drain Current Trade-off in AlGaN-GaN HEMTs</h3>
+        <div class="research-description">Analyzes the trade-offs between threshold voltage and drain current in AlGaN/GaN HEMTs, offering design guidelines for balancing performance and efficiency.</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/file/d/1P4IXaFGwXTebdQBlJqboyGQqiV0P6irj/view?usp=drivesdk" target="_blank"><button class="button">Read Paper</button></a>
+        </div>
+      </div>
+      <div class="research-card" data-aos="zoom-in" id="res5">
+        <h3>Electronic Digital Weight Machine Using AVR Microcontroller</h3>
+        <div class="research-description">Describes the development of a high-accuracy digital weighing machine using AVR microcontroller, detailing circuit design and calibration for weights up to 10 pounds.</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/file/d/1OZkgPZ6zrE-lKIY-rJmRIkG0a-hjJkVN/view?usp=drivesdk" target="_blank"><button class="button">Read Paper</button></a>
+        </div>
+      </div>
+      <div class="research-card" data-aos="zoom-in" id="res1">
+        <h3>Bridging The Energy Gap</h3>
+        <div class="research-description">Explores innovative strategies and technologies to address the global energy demand-supply imbalance, focusing on sustainable and efficient energy solutions.</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/file/d/1OsbkFZm2vbG72P-y_ShIBEFtelCpq_8x/view?usp=drivesdk" target="_blank"><button class="button">Read Paper</button></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="articles" data-aos="fade-up">
+    <h2 class="rainbow-glow" data-aos="fade-up" id="articles-title">My Articles🖋️</h2>
+    <div class="article-grid">
+      <div class="article-card" data-aos="zoom-in" id="art1">
+        <h3>Exploring Firebase Studio: A New Frontier in AI-Powered App Developments</h3>
+        <div class="article-description"></div>
+        <div class="card-buttons">
+          <a href="https://www.researchgate.net/publication/390729365_Exploring_Firebase_Studio-_A_New_Frontier_in_AI-Powered_App_Developments" target="_blank"><button class="button">Read Article</button></a>
+        </div>
+      </div>
+      <div class="article-card" data-aos="zoom-in" id="art2">
+        <h3>Comparative Analysis of AI Reports: Balancing Rigor, Narrative, and Engagement</h3>
+        <div class="article-description"></div>
+        <div class="card-buttons">
+          <a href="https://www.researchgate.net/publication/390421012_Comparative_Analysis_of_AI_Reports_Balancing_Rigor_Narrative_and_Engagement" target="_blank"><button class="button">Read Article</button></a>
+        </div>
+      </div>
+      <div class="article-card" data-aos="zoom-in" id="art3">
+        <h3>Higher Education and PSU Opportunities for a GATE English XH-C2 Qualifier with a BTech Background</h3>
+        <div class="article-description"></div>
+        <div class="card-buttons">
+          <a href="https://www.researchgate.net/publication/390060714_I_have_cleared_GATE_but_in_English_Subject_Now_What_Higher_Education_and_PSU_Opportunities_for_a_GATE_English_XH-C2_Qualifier_with_a_BTech_Background" target="_blank"><button class="button">Read Article</button></a>
+        </div>
+      </div>
+      <div class="article-card" data-aos="zoom-in" id="art4">
+        <h3>Can AI take over software developers job?</h3>
+        <div class="article-description"></div>
+        <div class="card-buttons">
+          <a href="https://www.researchgate.net/publication/389038945_Can_AI_take_over_software_developers_job_A_study_to_find_the_capabilities_of_current_AI_Agents_in_development_of_web_app" target="_blank"><button class="button">Read Article</button></a>
+        </div>
+      </div>
+      <div class="article-card" data-aos="zoom-in" id="art5">
+        <h3>ChatGPT vs DeepSeek</h3>
+        <div class="article-description"></div>
+        <div class="card-buttons">
+          <a href="https://www.researchgate.net/publication/388628850_ChatGPT_vs_DeepSeek" target="_blank"><button class="button">Read Article</button></a>
+        </div>
+      </div>
+      <div class="article-card" data-aos="zoom-in" id="art6">
+        <h3>The History of HEMT</h3>
+        <div class="article-description"></div>
+        <div class="card-buttons">
+          <a href="https://www.researchgate.net/publication/388469567_The_History_of_HEMT" target="_blank"><button class="button">Read Article</button></a>
+        </div>
+      </div>
+      <div class="article-card" data-aos="zoom-in" id="art7">
+        <h3>IoT-Based Motion Detection Alarm System</h3>
+        <div class="article-description"></div>
+        <div class="card-buttons">
+          <a href="https://www.researchgate.net/publication/387111957_IoT-Based_Motion_Detection_Alarm_System_From_Concept_to_Completion_with_Iterative_Design_and_Troubleshooting" target="_blank"><button class="button">Read Article</button></a>
+        </div>
+      </div>
+      <div class="article-card" data-aos="zoom-in" id="art8">
+        <h3>Interfacing MyDAQ with LabVIEW and uploading realtime data</h3>
+        <div class="article-description"></div>
+        <div class="card-buttons">
+          <a href="https://www.researchgate.net/publication/386534796_Interfacing_MyDAQ_with_LabVIEW_and_uploading_realtime_data_to_Google_Firebase" target="_blank"><button class="button">Read Article</button></a>
+        </div>
+      </div>
+      <div class="article-card" data-aos="zoom-in" id="art9">
+        <h3>Extracting the Heartbeat out of a PIR Sensor</h3>
+        <div class="article-description"></div>
+        <div class="card-buttons">
+          <a href="https://www.researchgate.net/publication/386534063_Extracting_the_Heartbeat_out_of_a_PIR_Sensor" target="_blank"><button class="button">Read Article</button></a>
+        </div>
+      </div>
+      <div class="article-card" data-aos="zoom-in" id="art10">
+        <h3>From Drawer to Dashboards: A Pragmatic Guide to Smart Engineering</h3>
+        <div class="article-description"></div>
+        <div class="card-buttons">
+          <a href="https://www.researchgate.net/publication/386324981_From_Drawer_to_Dashboards_A_Pragmatic_Guide_to_Smart_Engineering_-A_Life_Lesson_from_ESP8266_A_Journey_Beyond_Perfection" target="_blank"><button class="button">Read Article</button></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="internships" data-aos="fade-up">
+    <h2 class="rainbow-glow" data-aos="fade-up" id="internships-title">My Internships🧑🏻‍💻</h2>
+    <div class="internship-grid">
+      <div class="internship-card" data-aos="zoom-in" id="int1">
+        <h3>Center for Development of Advanced Computing - Industrial Internship</h3>
+        <div class="internship-description">Worked in a team of 8 members and constructed the best CNN model for a Drone Detection System.</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/file/d/1i0S0OXzmYgxc5O-J0XEaKbxeuS56XdKR/view?usp=drivesdk" target="_blank"><button class="button">View Certificate</button></a>
+        </div>
+      </div>
+      <div class="internship-card" data-aos="zoom-in" id="int2">
+        <h3>National Institute of Electronics and Information Technology - Academic Internship</h3>
+        <div class="internship-description">Developed a stroke prediction algorithm with 5 models and tested using 6 matrices.</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/file/d/1CqrMLWloHSxHZjWLIASlGfbelj-zW4Xn/view?usp=drivesdk" target="_blank"><button class="button">View Certificate</button></a>
+        </div>
+      </div>
+      <div class="internship-card" data-aos="zoom-in" id="int3">
+        <h3>Indian Institute of Technology - Academic Internship</h3>
+        <div class="internship-description">Annualization of events in over 100 short and long stories and replicated baseline models for NLP.</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/file/d/17Bt-XAr3dPkFuPgOURz2UoRG43Vh9ECF/view?usp=drivesdk" target="_blank"><button class="button">View Certificate</button></a>
+        </div>
+      </div>
+      <div class="internship-card" data-aos="zoom-in" id="int4">
+        <h3>Techgyan - Online Internship</h3>
+        <div class="internship-description">Completed an online internship with Techgyan, focusing on advanced technical skills.</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/drive/folders/1NoYWs2OaTN6N1bskUJlq5Xzt6KbkuQOY" target="_blank"><button class="button">View Certificate</button></a>
+        </div>
+      </div>
+      <div class="internship-card" data-aos="zoom-in" id="int5">
+        <h3>Social Internship</h3>
+        <div class="internship-description">Comprehensive study on the effect of Covid-19 pandemic in India. Survey conducted on more than 150 people and NGOs. Shortcomings were analyzed.</div>
+        <div class="card-buttons">
+          <a href="https://drive.google.com/file/d/1PMXj5YsQxHELArjOtzsIsLIKvCnd5Oeo/view?usp=drivesdk" target="_blank"><button class="button">View Certificate</button></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="certifications" data-aos="fade-up">
+    <h2 class="rainbow-glow" data-aos="fade-up" id="certifications-title">My Certifications📜</h2>
+    <h3 class="rainbow-glow" style="margin-top: 2rem">Coursera</h3>
+    <div class="skills">
+      <a href="https://drive.google.com/open?id=1mxbWr_rYGA2twymU_ppQ-L3vy7mWzeQ4&usp=drive_copy" target="_blank" class="skill-badge">ChatGPT for beginner</a>
+      <a href="https://drive.google.com/open?id=1SZsTyBPfq62VnBy13ncmIPeWbp01Nqwo&usp=drive_copy" target="_blank" class="skill-badge">Website Videos with Canva</a>
+      <a href="https://drive.google.com/open?id=1_M85BaVvsgROJeZFRnkcvAawTUT5BGZg&usp=drive_copy" target="_blank" class="skill-badge">Digital Marketing with Canva</a>
+      <a href="https://drive.google.com/open?id=1N81K661y2d2yMvr-I4xkddic1Jw8zvIL&usp=drive_copy" target="_blank" class="skill-badge">Excel Data Vizualisation</a>
+      <a href="https://drive.google.com/open?id=10iHnXFIbmJSf8EL64Vcu_-CP3l7KZBZY&usp=drive_copy" target="_blank" class="skill-badge">From Excel to Power BI</a>
+      <a href="https://drive.google.com/open?id=1Hns6JPL1-YIJbx6AC9Vm_jk9QIErVNWe&usp=drive_copy" target="_blank" class="skill-badge">Finance Non-Finance Professional</a>
+    </div>
+    <h3 class="rainbow-glow" style="margin-top: 2rem">Infosys Springboard</h3>
+    <div class="skills" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+      <a href="https://drive.google.com/file/d/15aKcac8Vtstc60JAKQxBtbkWzYXnAohA/view?usp=drive_link" target="_blank" class="skill-badge">Advanced MS Excel</a>
+      <a href="https://drive.google.com/file/d/132qyDKmWYLeKFYqN5ZuBepKT_PAKbgGz/view?usp=drive_link" target="_blank" class="skill-badge">Advanced Power BI</a>
+      <a href="https://drive.google.com/open?id=1OaKBCXUKfcj787GrOQzpLhTfv9M6o_gB&usp=drive_copy" target="_blank" class="skill-badge">Python Data Analyst</a>
+      <a href="https://drive.google.com/open?id=10naaedgk44-K9m_5vfWDBjBYRFLP-RRD&usp=drive_copy" target="_blank" class="skill-badge">Excel Charts</a>
+      <a href="https://drive.google.com/open?id=1PzpiDB_DV9aE_Pxe52IYj70bCHnY5tp1&usp=drive_copy" target="_blank" class="skill-badge">Introduction to AI</a>
+      <a href="https://drive.google.com/open?id=10qApmtMQ0RFJ3BHk4QRgJYEZ4UsCgX-J&usp=drive_copy" target="_blank" class="skill-badge">Internet of Things</a>
+      <a href="https://drive.google.com/open?id=1Q3WVabTKNq7IgvHsw193RvMOghnYQmnB&usp=drive_copy" target="_blank" class="skill-badge">Robotics Course</a>
+      <a href="https://drive.google.com/open?id=1THZ0MZ9275iTzSE7Zt1QnTF7pqU-z-eB&usp=drive_copy" target="_blank" class="skill-badge">STEM Components</a>
+      <a href="https://drive.google.com/open?id=1Q70PsjhbPpf8raJF31mnhkdY8gQPghFz&usp=drive_copy" target="_blank" class="skill-badge">IoT Edge Computing</a>
+      <a href="https://drive.google.com/open?id=16aJObdmaJNwluLX634HWJ1iJukLlJUXA&usp=drive_copy" target="_blank" class="skill-badge">IoT Automation Overview</a>
+      <a href="https://drive.google.com/open?id=1SnzZi5FLXU_GZrdmY7ygBZZYVopN0pLd&usp=drive_copy" target="_blank" class="skill-badge">Mastering IoT with Arduino</a>
+      <a href="https://drive.google.com/open?id=1VogucGQH_Vx49V14nM3CXbRLaFE6P1tg&usp=drive_copy" target="_blank" class="skill-badge">Project on MATLAB</a>
+      <a href="https://drive.google.com/open?id=1ViR8ZfiUJlDU-MqliYcQ_z4xIuPl29Z3&usp=drive_copy" target="_blank" class="skill-badge">Machine Learning with MATLAB</a>
+      <a href="https://drive.google.com/open?id=1CvFtckA7CSZHGBGPb5OqmCOyqga2Rdwe&usp=drive_copy" target="_blank" class="skill-badge">Skillsoft Excel course Badges</a>
+      <a href="https://drive.google.com/open?id=1SpXD0dcaG4lkbmW8Ya1rfqgz5f9kxuy0&usp=drive_copy" target="_blank" class="skill-badge">IoT Automation with ESP8266</a>
+      <a href="https://drive.google.com/open?id=1Q8EQwCsFtai5n_b8NA6160l8FRwgPS51&usp=drive_copy" target="_blank" class="skill-badge">IoT Communication Technologies</a>
+      <a href="https://drive.google.com/open?id=10sPtwKWCjNU7PWS6r95CjI_DWOtdgNAv&usp=drive_copy" target="_blank" class="skill-badge">Springboard Young Industry Enthusiast</a>
+      <a href="https://drive.google.com/open?id=1Q0e0-GCZff8bqxxsZh56GDpJtsKmWYnC&usp=drive_copy" target="_blank" class="skill-badge">Health and Wellness for Girls</a>
+    </div>
+    <h3 class="rainbow-glow" style="margin-top: 2rem">Programming Hub</h3>
+    <div class="skills">
+      <a href="https://drive.google.com/open?id=17c5n4gpxlb0cr0TBNjiaQc7EZv0eNjBS&usp=drive_copy" target="_blank" class="skill-badge">Fundamentals</a>
+      <a href="https://drive.google.com/open?id=17iuxVrDBE-FYpEgQwWWI21nFpOujUfdE&usp=drive_copy" target="_blank" class="skill-badge">IoT</a>
+      <a href="https://drive.google.com/open?id=16BN-gCf8yMyU3Itwd4TzovkWBvxtPxPN&usp=drive_copy" target="_blank" class="skill-badge">Python 3</a>
+      <a href="https://drive.google.com/open?id=16trfDqovguPzyEicPbkWwYAPaqMo-SRT&usp=drive_copy" target="_blank" class="skill-badge">Python Advanced</a>
+    </div>
+    <h3 class="rainbow-glow" style="margin-top: 2rem">IBM</h3>
+    <div class="skills">
+      <a href="https://drive.google.com/file/d/17B0v1izCI0YHCt-tWHJT0Uu2ujIFPCyU/view?usp=drive_link" target="_blank" class="skill-badge">Getting Started with DS</a>
+      <a href="https://drive.google.com/file/d/14F-1_We8Ez0UEq-zqtKtLzPS3HRgAHry/view?usp=drive_link" target="_blank" class="skill-badge">Enterprise DS Practice</a>
+      <a href="https://drive.google.com/file/d/17CRa1_9wbzcQuaDpJAfKikyvAVz9P6o2/view?usp=drive_link" target="_blank" class="skill-badge">ML for DS Projects</a>
+    </div>
+    <h3 class="rainbow-glow" style="margin-top: 2rem">Maven Silicon</h3>
+    <div class="skills">
+      <a href="https://drive.google.com/open?id=1-YqIcZwSqKuBa5xgVqDA1r3PPOGvvfGp&usp=drive_copy" target="_blank" class="skill-badge">VLSI SoC Design (30 days)</a>
+      <a href="https://drive.google.com/open?id=1c9_cCRfRJbCnzbJIteSDm-YbXH5KC8Ml&usp=drive_copy" target="_blank" class="skill-badge">VLSI SoC Design (3 days)</a>
+    </div>
+    <h3 class="rainbow-glow" style="margin-top: 2rem">Others</h3>
+    <div class="skills">
+      <a href="https://drive.google.com/open?id=1GpTU6TYwYX1jYTXcwv42shyla29ZCa1y&usp=drive_copy" target="_blank" class="skill-badge">CISCO Badges</a>
+      <a href="https://drive.google.com/open?id=1BEWGkrHMRU_w4xCE2eQiP_E95qD9Sd4C&usp=drive_copy" target="_blank" class="skill-badge">Space Robotics</a>
+      <a href="https://drive.google.com/open?id=1nJdcCO26Zha5rY0U2D82CkV4mKn_m1IM&usp=drive_copy" target="_blank" class="skill-badge">Energy Literature</a>
+      <a href="https://drive.google.com/open?id=1JgMKT_5PZdWpyyWErPtuA0AVuvlIIu4x&usp=drive_copy" target="_blank" class="skill-badge">Power BI Udemy</a>
+      <a href="https://drive.google.com/open?id=169O-CgnNSvnOef5wLAHAsl1kehnPkO6a&usp=drive_copy" target="_blank" class="skill-badge">Fundamentals of EV Chargers</a>
+      <a href="https://drive.google.com/open?id=1BEWGkrHMRU_w4xCE2eQiP_E95qD9Sd4C&usp=drive_copy" target="_blank" class="skill-badge">Introduction to CISCO Packet Tracer</a>
+      <a href="https://drive.google.com/open?id=1JgMKT_5PZdWpyyWErPtuA0AVuvlIIu4x&usp=drive_copy" target="_blank" class="skill-badge">Internship Letter from Techgyan</a>
+      <a href="https://drive.google.com/open?id=1kneOwFp9nVd2zHMYwTxOPIKOSaBNyPdS&usp=drive_copy" target="_blank" class="skill-badge">My Bharat</a>
+      <a href="https://drive.google.com/open?id=1Zrdi7AZqYvpSBE2Ist8qNySBzrg7-ksv&usp=drive_copy" target="_blank" class="skill-badge">One Week Lecture Series 1</a>
+      <a href="https://drive.google.com/open?id=1ZvW90olI3i-UbQFAD2kuEob-7Roi5-I2&usp=drive_copy" target="_blank" class="skill-badge">One Week Lecture Series 2</a>
+      <a href="https://drive.google.com/open?id=1ZloZ1f17hjfXnBB1AMVmaGA5Cb3bVIRi&usp=drive_copy" target="_blank" class="skill-badge">CDAC Quantum Computing</a>
+      <a href="https://drive.google.com/open?id=1AlcZT3QdE2szX0BayLTNLc3ElJa5jZBO&usp=drive_copy" target="_blank" class="skill-badge">Intel Workshop</a>
+      <a href="https://drive.google.com/open?id=1ZdDNhyXzx8Xi_CSotXIlTGaSY2K_ee1S&usp=drive_copy" target="_blank" class="skill-badge">NEO Participation Certificate</a>
+      <a href="https://drive.google.com/open?id=101bIwiVy3ZiiG_s6Un_cGi0mMDlLvHPv&usp=drive_copy" target="_blank" class="skill-badge">Techgyan Participation Certificate</a>
+      <a href="https://drive.google.com/open?id=1IjRxsvfNH8eSIlPowjsIbzcEEcyDbUEm&usp=drive_copy" target="_blank" class="skill-badge">Photography Competition</a>
+      <a href="https://drive.google.com/open?id=1E7w6jwx8jG4skgNmHwDEVyzlNV_YwKFl&usp=drive_copy" target="_blank" class="skill-badge">Concept of Bluetooth Robot and it's Creation</a>
+      <a href="https://drive.google.com/open?id=13re-zX9DGlKClXfL-AbyvbeYZ7_3BZfX&usp=drive_copy" target="_blank" class="skill-badge">Hybrid Drones Design and Applications</a>
+      <a href="https://drive.google.com/open?id=1JmnC8ZGqdwjus1KOitpEhupX6H9oUhPs&usp=drive_copy" target="_blank" class="skill-badge">IoT Technology</a>
+    </div>
+  </section>
+
+  <section id="achievements" data-aos="fade-up">
+    <h2 class="rainbow-glow" data-aos="fade-up" id="achievements-title">My Achievements🏆</h2>
+    <div class="skills">
+      <a href="https://drive.google.com/open?id=1-7_YisPBAAl1huhSp26PH9YU3u50ow8B&usp=drive_copy" target="_blank" class="skill-badge">Paper Presentation Competition🥇</a>
+      <a href="https://drive.google.com/file/d/1SRF5pIIZ7YrGcO2viM6z8nl7tgnTTVJv/view?usp=drive_link" target="_blank" class="skill-badge">Final Year Project Video Competition 🥇</a>
+      <a href="https://drive.google.com/open?id=1AcH_PPh49zn-y9RPxZfaH3QejZVQS3IV&usp=drive_copy" target="_blank" class="skill-badge">Photography🥈</a>
+    </div>
+  </section>
+
+  <section id="contact" data-aos="fade-up">
+    <h2 class="rainbow-glow" data-aos="fade-up" id="contact-title">Contact Me📞</h2>
+    <p data-aos="fade-up" id="contact-name"><strong>Name:</strong> Subhranil Dey</p>
+    <p data-aos="fade-up" id="contact-email"><strong>Email:</strong> <a href="mailto:subhranildey2306@gmail.com" style="color: yellowgreen;">subhranildey2306@gmail.com</a></p>
+    <p data-aos="fade-up" id="contact-phone"><strong>Phone:</strong> +91-8720970982</p>
+    <div class="social-icons" data-aos="fade-up" id="social-icons">
+      <a href="https://www.linkedin.com/in/subhranildey2306" target="_blank"><i class="fab fa-linkedin"></i></a>
+      <a href="https://www.instagram.com/subhranilde85" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.researchgate.net/profile/Subhranil-Dey" target="_blank"><i class="fab fa-researchgate"></i></a>
+      <a href="https://www.youtube.com/channel/UCxV8Osr7zCwa4cOny8ESsQA?app=desktop" target="_blank"><i class="fab fa-youtube"></i></a>
+    </div>
+  </section>
+
+  <footer id="footer">
+    © 2025 Subhranil Dey. All rights reserved.
+  </footer>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      once: false,
+      mirror: true,
+    });
+
+    const glow = document.getElementById('circuit-glow');
+    document.addEventListener('mousemove', e => {
+      glow.style.left = e.clientX + 'px';
+      glow.style.top = e.clientY + 'px';
+    });
+
+    const hoverSound = document.getElementById('hover-sound');
+    document.querySelectorAll('.project-card, .button, nav a, .article-card, .achievement-card, .certification-card, .skill-badge, .internship-card, .research-card').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        hoverSound.currentTime = 0;
+        hoverSound.play();
+      });
+    });
+
+    function createFirefly() {
+      const firefly = document.createElement('div');
+      firefly.className = 'firefly';
+      const type = Math.random();
+      let size;
+      if (type < 0.25) {
+        firefly.classList.add('rainbow');
+        size = Math.random() * 50 + 5;
+      } else if (type < 0.5) {
+        firefly.classList.add('cyan');
+        size = Math.random() * 10 + 3;
+      } else if (type < 0.75) {
+        firefly.classList.add('yellow');
+        size = Math.random() * 12 + 4;
+      } else {
+        firefly.classList.add('magenta');
+        size = Math.random() * 20 + 2;
+      }
+      firefly.style.width = `${size}px`;
+      firefly.style.height = `${size}px`;
+      firefly.style.left = `${Math.random() * 90 + 5}vw`;
+      firefly.style.top = `${Math.random() * 90 + 5}vh`;
+      document.body.appendChild(firefly);
+      animateFirefly(firefly);
+    }
+
+    function animateFirefly(firefly) {
+      const duration = Math.random() * 10 + 5;
+      let x = (Math.random() - 0.5) * 30;
+      let y = (Math.random() - 0.5) * 30;
+      const currentLeft = parseFloat(firefly.style.left);
+      const currentTop = parseFloat(firefly.style.top);
+      const nextLeft = Math.min(Math.max(currentLeft + x, 0), 100);
+      const nextTop = Math.min(Math.max(currentTop + y, 0), 100);
+      x = nextLeft - currentLeft;
+      y = nextTop - currentTop;
+      firefly.animate(
+        [
+          { transform: 'translate(0, 0)', opacity: 0.9 },
+          { transform: `translate(${x}vw, ${y}vh)`, opacity: Math.random() * 0.3 + 0.6 }
+        ],
+        {
+          duration: duration * 1000,
+          easing: 'ease-in-out',
+          fill: 'forwards'
+        }
+      ).onfinish = () => {
+        firefly.style.left = `${nextLeft}vw`;
+        firefly.style.top = `${nextTop}vh`;
+        animateFirefly(firefly);
+      };
+    }
+
+    for (let i = 0; i < 30; i++) createFirefly();
+  </script>
+</body>
+
+</html>
